@@ -1,6 +1,6 @@
 import { Flowchart } from '../types/flowchart';
 
-export const flowchart: Flowchart = {
+const flowchart: Flowchart = {
   start: {
     type: 'intro',
     question: 'Welkom bij de Project Coach',
@@ -26,4 +26,6 @@ export const flowchart: Flowchart = {
     }]
   }
   // We'll add more nodes as we progress
-}; 
+};
+
+export default flowchart; 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
-import { InteractionCard } from './components/InteractionCard';
-import { flowchart } from './data/flowchartData';
+import InteractionCard from './components/InteractionCard';
+import flowchart from './data/flowchartData';
 import { Node } from './types/flowchart';
 
 function App() {

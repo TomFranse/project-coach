@@ -13,7 +13,7 @@ interface InteractionCardProps {
   onButtonClick: (url: string) => void;
 }
 
-export const InteractionCard: React.FC<InteractionCardProps> = ({
+const InteractionCard: React.FC<InteractionCardProps> = ({
   node,
   onAnswer,
   onNext,
@@ -62,4 +62,6 @@ export const InteractionCard: React.FC<InteractionCardProps> = ({
       </CardContent>
     </Card>
   );
-}; 
+};
+
+export default InteractionCard; 
