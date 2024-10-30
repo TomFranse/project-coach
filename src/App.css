@@ -1,0 +1,46 @@
+:root {
+  --color-primary-start: #E6196B;
+  --color-primary-middle: #CF13B3;
+  --color-primary-end: #8D0BD1;
+  --color-text-light: #616166;
+  --color-text-dark: #A6A6A8;
+  --color-black: #070614;
+  --color-white: #FFFFFF;
+  --color-off-white: #F5F5F7;
+}
+
+.App {
+  min-height: 100vh;
+  background-color: var(--color-off-white);
+  padding: 2rem;
+}
+
+.project-coach {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+h1 {
+  color: var(--color-black);
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.visualization {
+  background-color: var(--color-white);
+  border-radius: 1rem;
+  padding: 2rem;
+  min-height: 400px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.interaction-card {
+  background-color: var(--color-white);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}

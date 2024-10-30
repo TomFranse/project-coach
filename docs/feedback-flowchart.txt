@@ -1,0 +1,258 @@
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { ArrowRight, RotateCcw, ChevronRight } from 'lucide-react';
+
+const FlowchartComponent = () => {
+  const [currentNode, setCurrentNode] = useState('start');
+  const [path, setPath] = useState(['start']);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const PLACEHOLDER_URL = "https://docs.google.com/document/d/11KHVabSL66jg_E_y-bpeImjQ5rvi3wZZbBAHKJ7Akdc/edit?tab=t.0";
+
+  const flowchart = {
+    start: {
+      question: "Wat kan ik doen?",
+      type: "intro",
+      next: "VraagIdee"
+    },
+    VraagIdee: {
+      question: "Heb je al een idee?",
+      yes: "VraagTakenlijst",
+      no: "VraagInformatie"
+    },
+    VraagInformatie: {
+      question: "Heb je genoeg informatie om een idee te bedenken?",
+      yes: "ActieBrainstorm",
+      no: "ActieOnderzoek"
+    },
+    ActieOnderzoek: {
+      endpoint: true,
+      activity: "Onderzoek",
+      buttons: [{ text: "Start Onderzoek", url: PLACEHOLDER_URL }]
+    },
+    ActieBrainstorm: {
+      endpoint: true,
+      activity: "Brainstorm",
+      buttons: [{ text: "Start Brainstorm", url: PLACEHOLDER_URL }]
+    },
+    VraagTakenlijst: {
+      question: "Heb je al een takenlijst?",
+      yes: "VraagVoltooiing",
+      no: "ActieTakenlijst"
+    },
+    ActieTakenlijst: {
+      endpoint: true,
+      activity: "Takenlijst",
+      buttons: [{ text: "Maak Takenlijst", url: PLACEHOLDER_URL }]
+    },
+    VraagVoltooiing: {
+      question: "Heb je de taken al voltooid?",
+      yes: "VraagUitvoering",
+      no: "ActieTakenlijstReview"
+    },
+    ActieTakenlijstReview: {
+      endpoint: true,
+      activity: "Takenlijst Review/Verbetering",
+      buttons: [{ text: "Review Taken", url: PLACEHOLDER_URL }]
+    },
+    VraagUitvoering: {
+      question: "Zijn alle taken uitgevoerd?",
+      yes: "VraagEigenTest",
+      no: "ActieTakenlijstReview"
+    },
+    VraagEigenTest: {
+      question: "Heb je je eindproduct zelf getest?",
+      yes: "VraagDoelgroepTest",
+      no: "ActieInterneTest"
+    },
+    ActieInterneTest: {
+      endpoint: true,
+      activity: "Interne Test",
+      buttons: [{ text: "Start Interne Test", url: PLACEHOLDER_URL }]
+    },
+    VraagDoelgroepTest: {
+      question: "Heb je het eindproduct met de doelgroep (in het echt) getest?",
+      yes: "VraagFeedbackVerwerkt",
+      no: "ActiePubliekeTest"
+    },
+    ActiePubliekeTest: {
+      endpoint: true,
+      activity: "Publieke Test",
+      buttons: [{ text: "Start Publieke Test", url: PLACEHOLDER_URL }]
+    },
+    VraagFeedbackVerwerkt: {
+      question: "Heb je de feedback uit je test verwerkt?",
+      yes: "VraagFeedbackTaken",
+      no: "ActieFeedbackVerwerking"
+    },
+    ActieFeedbackVerwerking: {
+      endpoint: true,
+      activity: "Feedback Verwerking",
+      buttons: [{ text: "Verwerk Feedback", url: PLACEHOLDER_URL }]
+    },
+    VraagFeedbackTaken: {
+      question: "Heb je de feedback al op de taken lijst gezet?",
+      yes: "VraagLaatsteLessen",
+      no: "ActieFeedbackTaken"
+    },
+    ActieFeedbackTaken: {
+      endpoint: true,
+      activity: "Feedback Taken",
+      buttons: [{ text: "Maak Feedback Taken", url: PLACEHOLDER_URL }]
+    },
+    VraagLaatsteLessen: {
+      question: "Heb je de laatste 3 lessen feedback gekregen?",
+      yes: "ActieEindpresentatie",
+      no: "ActieFeedbackVerzamelen"
+    },
+    ActieEindpresentatie: {
+      endpoint: true,
+      activity: "Eindpresentatie voorbereiden",
+      buttons: [{ text: "Start Voorbereiding", url: PLACEHOLDER_URL }]
+    },
+    ActieFeedbackVerzamelen: {
+      endpoint: true,
+      activity: "Feedback Verzamelen",
+      buttons: [{ text: "Verzamel Feedback", url: PLACEHOLDER_URL }]
+    }
+  };
+
+  const handleChoice = (choice) => {
+    setIsTransitioning(true);
+    const node = flowchart[currentNode];
+    const nextNode = node.type === 'intro' ? node.next : node[choice];
+    setPath(prev => [...prev, nextNode]);
+    
+    setTimeout(() => {
+      setCurrentNode(nextNode);
+      setIsTransitioning(false);
+    }, 300);
+  };
+
+  const resetFlow = () => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentNode('start');
+      setPath(['start']);
+      setIsTransitioning(false);
+    }, 300);
+  };
+
+  const handleActionButton = (url) => {
+    window.open(url, '_blank');
+  };
+
+  const renderNode = (nodeId) => {
+    const node = flowchart[nodeId];
+
+    if (node.endpoint) {
+      return (
+        <div className="space-y-4 transition-all duration-300">
+          <h3 className="text-xl font-semibold text-[#070614]">{node.activity}</h3>
+          <div className="space-y-2">
+            {node.buttons.map((button, index) => (
+              <Button
+                key={index}
+                onClick={() => handleActionButton(button.url)}
+                className="w-full bg-gradient-to-r from-[#8D0BD1] via-[#CF13B3] to-[#E6196B] 
+                          hover:opacity-90 transition-all duration-300 transform hover:scale-[1.02]
+                          text-white shadow-lg hover:shadow-xl"
+              >
+                <ArrowRight className="h-4 w-4 mr-2" />
+                {button.text}
+              </Button>
+            ))}
+          </div>
+          <Button 
+            onClick={resetFlow}
+            variant="outline"
+            className="w-full mt-4 border-[#616166] text-[#616166] hover:bg-gray-50
+                      transition-all duration-300 transform hover:scale-[1.02]"
+          >
+            <RotateCcw className="h-4 w-4 mr-2" />
+            Begin Opnieuw
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-4">
+        <p className="text-lg text-[#616166] mb-6">{node.question}</p>
+        <div className="grid grid-cols-2 gap-4">
+          {node.type === 'intro' ? (
+            <Button 
+              onClick={() => handleChoice('next')}
+              className="w-full col-span-2 bg-gradient-to-r from-[#8D0BD1] via-[#CF13B3] to-[#E6196B]
+                        hover:opacity-90 transition-all duration-300 transform hover:scale-[1.02]
+                        text-white shadow-lg hover:shadow-xl"
+            >
+              Volgende
+            </Button>
+          ) : (
+            <>
+              <Button 
+                onClick={() => handleChoice('yes')}
+                className="w-full bg-gradient-to-r from-[#8D0BD1] via-[#CF13B3] to-[#E6196B]
+                          hover:opacity-90 transition-all duration-300 transform hover:scale-[1.02]
+                          text-white shadow-lg hover:shadow-xl"
+              >
+                Ja
+              </Button>
+              <Button 
+                onClick={() => handleChoice('no')}
+                variant="outline"
+                className="w-full border-[#616166] text-[#616166] hover:bg-gray-50
+                          transition-all duration-300 transform hover:scale-[1.02]"
+              >
+                Nee
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen p-8" style={{
+      background: `linear-gradient(135deg, #8D0BD1 0%, #CF13B3 50%, #E6196B 100%)`
+    }}>
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-6 flex items-center flex-wrap gap-2 text-white/80">
+          {path.map((node, index) => (
+            <React.Fragment key={node}>
+              {index > 0 && <ChevronRight className="h-4 w-4 opacity-50" />}
+              <span className="text-sm font-medium">
+                {flowchart[node].endpoint ? flowchart[node].activity : 'Vraag ' + (index + 1)}
+              </span>
+            </React.Fragment>
+          ))}
+        </div>
+
+        <Card className={`w-full transform transition-all duration-300 ${
+          isTransitioning ? 'scale-95 opacity-0' : 'scale-100 opacity-100'
+        } bg-white/90 backdrop-blur-lg shadow-xl`}
+        style={{
+          borderRadius: '1rem',
+          border: '1px solid rgba(255,255,255,0.2)'
+        }}>
+          <CardHeader className="border-b border-gray-100">
+            <CardTitle className="text-[#070614] flex items-center justify-between">
+              Project Feedback Helper
+              <span className="text-sm font-normal text-[#616166]">
+                Stap {path.length} van {Object.keys(flowchart).length}
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            {renderNode(currentNode)}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default FlowchartComponent;
